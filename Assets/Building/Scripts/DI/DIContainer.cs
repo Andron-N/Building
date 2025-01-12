@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Building.Scripts.DI
+namespace DI
 {
   public class DIContainer
   {

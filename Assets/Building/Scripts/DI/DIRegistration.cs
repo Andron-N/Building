@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Building.Scripts.DI
+namespace DI
 {
   public class DIRegistration
   {

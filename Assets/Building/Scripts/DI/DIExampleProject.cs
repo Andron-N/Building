@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Building.Scripts.DI
+namespace DI
 {
   public class MyAwesomeProjectService
   {

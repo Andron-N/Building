@@ -1,25 +1,30 @@
 ﻿using Game.GamePlay.Root.View;
 using Game.GameRoot;
-using System;
+using Game.MainMenu.Root;
+using R3;
 using UnityEngine;
 
 namespace Game.GamePlay.Root
 {
   public class GameplayEntryPoint : MonoBehaviour
   {
-    public event Action GoToMainMenuSceneRequested;
-
     [SerializeField] private UIGamePlayRootBinder _sceneUIRootPrefab;
 
-    public void Run(UIRootView uiRoot)
+    public Observable<GameplayExitParams> Run(UIRootView uiRoot, GameplayEnterParams enterParams)
     {
       UIGamePlayRootBinder uiScene = Instantiate(_sceneUIRootPrefab);
       uiRoot.AttachSceneUI(uiScene.gameObject);
 
-      uiScene.GoToMainMenuButtonClicked += () =>
-      {
-        GoToMainMenuSceneRequested?.Invoke();
-      };
+      Subject<Unit> exitSceneSignalSubject = new Subject<Unit>();
+      uiScene.Bind(exitSceneSignalSubject);
+
+      Debug.Log($"GAMEPLAY ENTRY POINT: save file name = {enterParams.SaveFileName}, level to load = {enterParams.LevelNumber}");
+
+      MainMenuEnterParams mainMenuEnterParams = new MainMenuEnterParams("Fatality");
+      GameplayExitParams exitParams = new GameplayExitParams(mainMenuEnterParams);
+      Observable<GameplayExitParams> exitToMainMenuSceneSignal = exitSceneSignalSubject.Select(_ => exitParams);
+
+      return exitToMainMenuSceneSignal;
     }
   }
 }
